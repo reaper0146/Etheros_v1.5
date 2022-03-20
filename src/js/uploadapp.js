@@ -1,0 +1,80 @@
+const IPFS = require('ipfs-mini');
+const ipfs = new IPFS({host: 'ipfs.infura.io', port: 5001, protocol: 'https'});
+const CryptoJS = require('crypto-js');
+
+
+uploadFile = () => {
+  const file = event.target.files[0]//document.getElementById('input').files[0];
+  console.log('Yolo')
+  //var file = encryptWithAES(test);
+  let reader = new window.FileReader();
+  reader.readAsText(file);
+  reader.onloadend = () => convertToBuffer(reader);
+  //console.log(file.result)
+  //console.log(reader.result)
+
+  convertToBuffer = async(reader) => {
+    //file is converted to a buffer to prepare for uploading to IPFS
+      var enctext = await encryptWithAES(reader.result)
+      const buffer = await Buffer.from(enctext);
+      console.log(enctext)
+    //set this buffer -using es6 syntax
+      //setState({buffer});
+ //   console.log(data1);\
+ ipfs.add(buffer, (err,hash) => {
+      if (err) {
+          return console.log(err)
+      }
+      
+      $('#hashvalue').text(hash);
+      $('#ipfslinktitle').text('Your IPFS Link');
+      $('#ipfslink').text('https://ipfs.infura.io/ipfs/' + hash);
+
+
+      
+      
+      });
+  };
+
+};
+
+submitFile = () => {
+$('#hashvalue').text('');
+$('#ipfslink').text('');
+$('#ipfslinktitle').text('');
+     
+  console.log("Submitted!")
+
+};
+
+getLink = () => {
+  $('#hashvalue').text('');
+  $('#ipfslink').text('');
+  $('#ipfslinktitle').text('');
+       
+    console.log("Submitted!")
+  
+  };
+
+  
+
+const encryptWithAES = async (text) => {
+  const passphrase = '123';
+  return CryptoJS.AES.encrypt(text, passphrase).toString();
+};
+/*
+testFile = () => {
+  
+  console.log("Submitted!")
+
+const file = document.getElementById('filepy').files[0];
+//let photo = document.getElementById("image-file").files[0];  // file from input
+let req = new XMLHttpRequest();
+let formData = new FormData();
+
+formData.append("file", file);    
+let url = "http://localhost:5001/testPy";                            
+req.open("POST", url, true);
+req.send(formData);
+  
+  };*/
