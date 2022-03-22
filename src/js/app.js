@@ -87,14 +87,17 @@ App = {
         $('.btn-show-events').show();
     },
 
-    runPython: async (temp) =>{
+    runPython: async (identifier, key) =>{
 			//let result = document.querySelector('.result');
 			//let name = document.querySelector('#name');
-            let test = temp;
-			let cid = $('#cid').val(); //document.querySelector('cid');
-            console.log(cid);
-            console.log(test);
-            console.log(typeof(test));
+            let cid = identifier;
+            let de_key = key;
+            console.log(key)
+            console.log(de_key)
+			//let cid = $('#cid').val(); //document.querySelector('cid');
+            //console.log(cid);
+            //console.log(test);
+            //console.log(typeof(test));
 			
 			// Creating a XHR object
 			let xhr = new XMLHttpRequest();
@@ -117,7 +120,7 @@ App = {
 			};
 
 			// Converting JSON data to string
-			var data = JSON.stringify({ "cid": test });
+			var data = JSON.stringify({ "cid": identifier, "key": key});
             console.log(data)
 
 			// Sending data with the request
@@ -145,34 +148,6 @@ App = {
         $('.btn-show-events').hide();
     },
 
-    /*encryptMessage: async(key) => {
-        let encoded = getMessageEncoding();
-        // counter will be needed for decryption
-        counter = window.crypto.getRandomValues(new Uint8Array(16));
-        console.log(counter)
-        return window.crypto.subtle.encrypt(
-          {
-            name: "AES-CTR",
-            counter,
-            length: 64
-          },
-          key,
-          encoded
-        );
-      },
-
-       decryptMessage: (key, ciphertext) =>{
-        return window.crypto.subtle.decrypt(
-          {
-            name: "AES-CTR",
-            counter,
-            length: 64
-          },
-          key,
-          ciphertext
-        );
-      },*/
-
     sellArticle: async () => {
         const articlePriceValue = parseFloat($('#article_price').val());
         const articlePrice = isNaN(articlePriceValue) ? "0" : articlePriceValue.toString();
@@ -181,6 +156,8 @@ App = {
         const _price = window.web3.utils.toWei(articlePrice, "ether");
         //const test = $('#hashvalue').text();
         const _hashvalue = $('#hashvalue').text();
+        const _decryptKey = $('#decryptKey').text();
+        console.log(_decryptKey)
         //testenc = await encryptMessage(_name)
         //console.log(testenc)
         //testdeypt = await 
@@ -195,7 +172,7 @@ App = {
         //    console.log(value123);
             const transactionReceipt = await marketInstance.sellArticle(
                 _name,
-                _description,
+                _decryptKey,
                 _price,
                 _hashvalue,
                 {from: App.account, gas: 5000000}
@@ -266,10 +243,11 @@ App = {
                     console.log('https://ipfs.infura.io/ipfs/' + event.returnValues._hashvalue);
                     console.log(event.returnValues._name);
                     console.log(event.returnValues._seller);
+                    console.log(event.returnValues._description);
                     await $('#purchaselink').text(event.returnValues._hashvalue);
                     $('#modal-loading').attr('hidden', false);
-                    hash_test = event.returnValues._hashvalue
-                    App.runPython(event.returnValues._hashvalue);
+                    //hash_test = event.returnValues._hashvalue
+                    App.runPython(event.returnValues._hashvalue, event.returnValues._description);
                     App.blurBackground();
 
                 //} else {
@@ -291,47 +269,13 @@ App = {
             /*    console.log('https://ipfs.infura.io/ipfs/' + event.returnValues._hashvalue);
                console.log(event.returnValues._name);
                console.log(event.returnValues._seller); */
-               console.log(hash_test);
+               //console.log(hash_test);
             //await App.testfn(hash_test);
             console.log("transaction receipt", transactionReceipt);
             $('#modal-loading').attr('hidden', true);
             $('#modal-receipt').attr('hidden', false);
             App.blurBackground();
 
-
-
-            
-
-
-            
-
-// FOLLOWING CODE OPENS WINDOW (IN WORKS)
-
-
-        /*    print = () => {
-                let popupWin = window.open('', '_blank', 'top=0,left=0,height=100%,width=auto');
-                popupWin.document.open();
-                popupWin.document.write(`
-                  <html>
-                    <head>
-                      <title>Here is your passcode</title>
-                     </head>
-                <body>test</body>
-                  </html>`
-                );
-                popupWin.document.close();
-            }
-            function openOther(){
-              //I called Api using service
-               let scope=this;
-               setTimeout(function() { scope.print(); }, 3000);
-            }
-            openOther();
-*/
-        //   App.logBuyArticleEventListener = marketInstance.LogBuyArticle({fromBlock: '0'}).on("data", event => {
-        //  console.log('https://ipfs.infura.io/ipfs/' + event.returnValues._hashvalue);
-       // })
-           // console.log(marketInstance.Article.hashvalue);
         } catch(error) {
             console.error(error);
             $('#modal-loading').attr('hidden', true);
@@ -344,6 +288,7 @@ App = {
     getArticle: async () => {
         event.preventDefault();
         var hash_test = 'empty'
+        var decrypt_key = 'empty'
 
         // retrieve the article price
         var _articleId = $(event.target).data('id');
@@ -375,33 +320,16 @@ App = {
                 //console.log(transactionReceipt.receipt);
                 console.log(_articleId);
                 //if (number == _articleId){
-                    console.log('https://ipfs.infura.io/ipfs/' + event.returnValues._hashvalue);
-                    console.log(event.returnValues._name);
-                    console.log(event.returnValues._seller);
-                    $('#purchaselink').text(event.returnValues._hashvalue);
+                    //console.log('https://ipfs.infura.io/ipfs/' + event.returnValues._hashvalue);
+                    console.log(event.returnValues._hashvalue);
+                    console.log(event.returnValues._description);
+                    //$('#purchaselink').text(event.returnValues._hashvalue);
                     $('#modal-loading').attr('hidden', false);
-                    hash_test = event.returnValues._hashvalue
+                    hash_test = event.returnValues._hashvalue;
+                    decrypt_key = event.returnValues._description;;
                     App.blurBackground();
-
-                //} else {
-                //    return
-            //    }
                 });                
             });     
-
-            /*    App.logBuyArticleEventListener = marketInstance.LogBuyArticle({fromBlock: "0" }).on("data", event => {
-                
-               console.log(_articleId);
-               console.log(event.returnValues);
-               
-
-               
-
-                });
-
-            /*    console.log('https://ipfs.infura.io/ipfs/' + event.returnValues._hashvalue);
-               console.log(event.returnValues._name);
-               console.log(event.returnValues._seller); */
             console.log(hash_test);
             //await App.testfn(hash_test);
             console.log("transaction receipt", transactionReceipt);
@@ -418,19 +346,11 @@ App = {
 
         if (hash_test === 'empty')
         {
-<<<<<<< HEAD
             $('#modal-buyIt').attr('hidden', false);
         }
         else{
             $('#modal-receipt').attr('hidden', false);
-            App.runPython(hash_test);
-=======
-            $('#modal-receipt').attr('hidden', false);
-        }
-        else{
-            $('#modal-receipt').attr('hidden', false);
-            App.runPython(event.returnValues._hashvalue);
->>>>>>> 5f6fc8ba4a1ec7afad4958bf2b10f430fbdd0d45
+            App.runPython(hash_test, decrypt_key);
         }
     },
 
@@ -469,7 +389,7 @@ App = {
         // Retrieve and fill the article template
         var articleTemplate = $('#articleTemplate');
         articleTemplate.find('.panel-title').text(" " + name);
-        articleTemplate.find('.article-description').text(description);
+        //articleTemplate.find('.article-description').text(description);
         articleTemplate.find('.article-price').text(etherPrice);
         articleTemplate.find('.btn-buy').attr('data-id', id);
         articleTemplate.find('.btn-buy').attr('data-value', etherPrice);
