@@ -32,7 +32,7 @@ app.post('/runPython', (req,res)=> {
     console.log(url)
     const output = execSync(url, { encoding: 'utf-8' });  // the default is 'buffer'
 //console.log('Output was:\n', output);
-    console.log(output)
+    //console.log(output)
 
 
 
@@ -40,6 +40,7 @@ app.post('/runPython', (req,res)=> {
 //console.log(typeof(decryptWithAES(output)))
 
     decrypted = decryptWithAES(output)
+    console.log(decrypted)
 
 
   
