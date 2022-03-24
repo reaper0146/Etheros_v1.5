@@ -243,11 +243,11 @@ App = {
                     console.log('https://ipfs.infura.io/ipfs/' + event.returnValues._hashvalue);
                     console.log(event.returnValues._name);
                     console.log(event.returnValues._seller);
-                    console.log(event.returnValues._description);
+                    console.log(event.returnValues._decryptkey);
                     await $('#purchaselink').text(event.returnValues._hashvalue);
                     $('#modal-loading').attr('hidden', false);
                     //hash_test = event.returnValues._hashvalue
-                    App.runPython(event.returnValues._hashvalue, event.returnValues._description);
+                    App.runPython(event.returnValues._hashvalue, event.returnValues._decryptkey);
                     App.blurBackground();
 
                 //} else {
@@ -322,11 +322,11 @@ App = {
                 //if (number == _articleId){
                     //console.log('https://ipfs.infura.io/ipfs/' + event.returnValues._hashvalue);
                     console.log(event.returnValues._hashvalue);
-                    console.log(event.returnValues._description);
+                    console.log(event.returnValues._decryptkey);
                     //$('#purchaselink').text(event.returnValues._hashvalue);
                     $('#modal-loading').attr('hidden', false);
                     hash_test = event.returnValues._hashvalue;
-                    decrypt_key = event.returnValues._description;;
+                    decrypt_key = event.returnValues._decryptkey;
                     App.blurBackground();
                 });                
             });     

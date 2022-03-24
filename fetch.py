@@ -10,7 +10,7 @@ datatest = text_file.read()
  
 #close file
 text_file.close()
-#print(datatest)
+print(datatest)
 
 data = io.StringIO(datatest)
 
@@ -55,4 +55,4 @@ plt.title('Salary vs Experience (Test set)')
 plt.xlabel('Years of Experience')
 plt.ylabel('Salary')
 plt.show()
-print("\nSuccessfully ran!")
+print("\nEnd")

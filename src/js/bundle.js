@@ -9041,6 +9041,18 @@ module.exports = XMLHttpRequest;
 const IPFS = require('ipfs-mini');
 const ipfs = new IPFS({host: 'ipfs.infura.io', port: 5001, protocol: 'https'});
 const CryptoJS = require('crypto-js');
+var key = 'empty'
+
+makeid = (length) =>{
+  var result           = '';
+  var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var charactersLength = characters.length;
+  for ( var i = 0; i < length; i++ ) {
+    result += characters.charAt(Math.floor(Math.random() * 
+charactersLength));
+ }
+ return result;
+};
 
 
 uploadFile = () => {
@@ -9057,7 +9069,8 @@ uploadFile = () => {
     //file is converted to a buffer to prepare for uploading to IPFS
       var enctext = await encryptWithAES(reader.result)
       const buffer = await Buffer.from(enctext);
-      console.log(enctext)
+      console.log(key)
+      //console.log(enctext)
     //set this buffer -using es6 syntax
       //setState({buffer});
  //   console.log(data1);\
@@ -9069,6 +9082,7 @@ uploadFile = () => {
       $('#hashvalue').text(hash);
       $('#ipfslinktitle').text('Your IPFS Link');
       $('#ipfslink').text('https://ipfs.infura.io/ipfs/' + hash);
+      $('#decryptKey').text(key);
 
 
       
@@ -9099,24 +9113,11 @@ getLink = () => {
   
 
 const encryptWithAES = async (text) => {
-  const passphrase = '123';
+  key = makeid(10)
+  console.log(key)
+  const passphrase = key;
+  console.log(passphrase)
   return CryptoJS.AES.encrypt(text, passphrase).toString();
 };
-/*
-testFile = () => {
-  
-  console.log("Submitted!")
-
-const file = document.getElementById('filepy').files[0];
-//let photo = document.getElementById("image-file").files[0];  // file from input
-let req = new XMLHttpRequest();
-let formData = new FormData();
-
-formData.append("file", file);    
-let url = "http://localhost:5001/testPy";                            
-req.open("POST", url, true);
-req.send(formData);
-  
-  };*/
 }).call(this)}).call(this,require("buffer").Buffer)
 },{"buffer":3,"crypto-js":14,"ipfs-mini":40}]},{},[42]);
